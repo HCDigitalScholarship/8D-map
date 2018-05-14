@@ -1,0 +1,13 @@
+{% block content %}
+<table class="resource_table">
+
+{% if site.name %}
+{{ site.name }}
+{% endif %}
+
+{% if site.contact is not None %}
+{{ site.contact }}
+{% endif %}
+
+{% endblock %}
+
