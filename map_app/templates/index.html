@@ -77,10 +77,9 @@
           <span></span>
         </div>
       </a>
-      <ul class="dropdown-menu calcite-bgcolor-green">
-        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
+      <ul class="dropdown-menu calcite-bgcolor-red">
+        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-globe"></span> Search</a></li>
         <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
-        <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
         <li><a role="menuitem" tabindex="0" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
       </ul>
     </div>
@@ -104,35 +103,28 @@
 
   <!-- Panel -->
 
-  <div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-green" role="tablist" aria-multiselectable="true">
+  <div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-red" role="tablist" aria-multiselectable="true">
   
     <!-- Info Panel -->
 
     <div id="panelInfo" class="panel collapse">
       <div id="headingInfo" class="panel-heading" role="tab">
         <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
         </div>
       </div>
       <div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
         <div class="panel-body">            
-          <p>The main styles used in this app are:</p>
-          Body
-          <li>calcite-nav-bottom</li>
-          <li>calcite-layout-large-title</li>
-          <br>
-          Nav
-          <li>calcite-bgcolor-dark-green</li>
-          <li>calcite-text-light</li>
-          <br>
-          Panels
-          <li>calcite-panels-left</li>
-          <li>calcite-bgcolor-dark-green</li>
-          <li>calcite-bg-custom</li>
-        </div>
-      </div>
-    </div>
+          <form action="" method="post">
+          {% csrf_token %}
+          <table>
+           {{ form }} 
+          </table>
+          <input type="submit" value="Search" /> 
+          </form>
+ </div>      
+</div>
 
     <!-- Search Panel -->
 
