@@ -78,8 +78,9 @@
         </div>
       </a>
       <ul class="dropdown-menu calcite-bgcolor-red">
-        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-globe"></span> Search</a></li>
+        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
         <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+        <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
         <li><a role="menuitem" tabindex="0" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
       </ul>
     </div>
@@ -92,11 +93,6 @@
      <!-- Nav -->
     <ul class="calcite-nav nav navbar-nav">                    
       <li><div class="calcite-navbar-search hidden-xs"><div id="geocode"></div></div></li>
-          <form action="" method="post">
-          {% csrf_token %}
-           {{ form.search }}
-          <input type="submit" value="Search" />
-          </form>
     </ul>
   </nav><!--/.navbar -->
 
@@ -115,21 +111,28 @@
     <div id="panelInfo" class="panel collapse">
       <div id="headingInfo" class="panel-heading" role="tab">
         <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
         </div>
       </div>
       <div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
         <div class="panel-body">            
-          <form action="" method="post">
-          {% csrf_token %}
-          <table>
-           {{ form }} 
-          </table>
-          <input type="submit" value="Search" /> 
-          </form>
- </div>      
-</div>
+          <p>The main styles used in this app are:</p>
+          Body
+          <li>calcite-nav-bottom</li>
+          <li>calcite-layout-large-title</li>
+          <br>
+          Nav
+          <li>calcite-bgcolor-dark-green</li>
+          <li>calcite-text-light</li>
+          <br>
+          Panels
+          <li>calcite-panels-left</li>
+          <li>calcite-bgcolor-dark-green</li>
+          <li>calcite-bg-custom</li>
+        </div>
+      </div>
+    </div>
 
     <!-- Search Panel -->
 
@@ -188,7 +191,7 @@
       worldTransportation = L.esri.basemapLayer('ImageryTransportation');      
       // Download GeoJSON data with Ajax
         fetch(dataurl)
-         .then(function(resp) {
+          .then(function(resp) {
             return resp.json();
           })
           .then(function(data) {
@@ -199,8 +202,6 @@
                 layer.bindPopup(content);
             }}).addTo(map);
              });
-
-
     function setBasemap(basemap) {
       if (layer) {
         map.removeLayer(layer);
@@ -268,6 +269,34 @@
         setBasemap($(this).val());
       });
 
+      // Search
+      var input = $(".geocoder-control-input");
+      input.focus(function(){
+        $("#panelSearch .panel-body").css("height", "150px");
+      });
+      input.blur(function(){
+         $("#panelSearch .panel-body").css("height", "auto");
+      });
+
+      // Attach search control for desktop or mobile
+      function attachSearch() {
+        var parentName = $(".geocoder-control").parent().attr("id"),
+          geocoder = $(".geocoder-control"),
+          width = $(window).width();
+        if (width <= 767 && parentName !== "geocodeMobile") {
+          geocoder.detach();
+          $("#geocodeMobile").append(geocoder);
+        } else if (width > 767 && parentName !== "geocode"){
+          geocoder.detach();
+          $("#geocode").append(geocoder);
+        }
+      }
+
+      $(window).resize(function() {
+        attachSearch();
+      });
+
+      attachSearch();
 
     });<!-- jQuery -->
   </script>
