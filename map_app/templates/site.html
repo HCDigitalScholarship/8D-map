@@ -2,12 +2,9 @@
 <table class="resource_table">
 
 {% if site.name %}
-{{ site.name }}
+<b>{{ site.name }}</b>
 {% endif %}
 
-{% if site.contact is not None %}
-{{ site.contact }}
-{% endif %}
-
+{{ site.description |safe }}
 {% endblock %}
-
+<a href="{% url 'index' %}">Back</a>

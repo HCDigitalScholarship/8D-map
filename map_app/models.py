@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.gis.db import models
 from djgeojson.fields import PointField
 from ckeditor.fields import RichTextField
-
+from ckeditor_uploader.fields import RichTextUploadingField
 class PartnerSite(models.Model):
 
     geom = PointField(null=True, blank=True)
@@ -10,7 +10,7 @@ class PartnerSite(models.Model):
     organization = models.ManyToManyField('PartnerOrganization', blank=True)
     contact = models.ManyToManyField('Person', blank=True)
     haverford_office = models.ManyToManyField('HaverfordOffice', blank=True)
-    description = RichTextField(blank=True)
+    description = RichTextUploadingField(blank=True)
     when_available = models.CharField(max_length=200, blank=True)
     type_of_opportunity = models.ManyToManyField('TypeOfOpportunity', blank=True)
     area_of_interest = models.ManyToManyField('AreaOfInterest', blank=True)
