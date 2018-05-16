@@ -1,4 +1,11 @@
 {% load staticfiles %}
+{% load leaflet_tags %}
+{% load geojson_tags %}
+
+{% block extra_assets %}
+  {% leaflet_js %}
+  {% leaflet_css %}
+{% endblock %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +28,6 @@
   <!-- Load Leaflet from CDN-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
-
   <!-- Load Esri Leaflet from CDN -->
   <script src="https://unpkg.com/esri-leaflet@2.0.7"></script>
 
@@ -174,32 +180,28 @@
     
   </div> <!-- /.calcite-panels -->
 
+
   <script>
     
     // ============
     // Esri-Leaflet 
     // ============
-    var dataurl = '{% url "data" %}';
 
     var map = L.map('map', {zoomControl: false}).setView([25.969880, -36.367591], 3),
       layer = L.esri.basemapLayer('NationalGeographic').addTo(map),
       // layerLabels = L.esri.basemapLayer('xxxLabels').addTo(map);
       layerLabels = null,
       worldTransportation = L.esri.basemapLayer('ImageryTransportation');      
-      // Download GeoJSON data with Ajax
-        fetch(dataurl)
-         .then(function(resp) {
-            return resp.json();
-          })
-          .then(function(data) {
-            L.geoJson(data, {
+
+
+      var data = {{ sites|geojsonfeature:"popupContent"|safe }};
+
+      L.geoJson(data, {
               onEachFeature: function onEachFeature(feature, layer) {
-                var props = feature.properties;
-                var content = `<a href="${props.name}"><h3>${props.name}</h3></a><p>${props.description}</p>`;
+                var props = feature.properties.popupContent;
+                var content = `<p>${props}</p>`;
                 layer.bindPopup(content);
             }}).addTo(map);
-             });
-
 
     function setBasemap(basemap) {
       if (layer) {
