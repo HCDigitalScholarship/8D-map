@@ -14,10 +14,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- Lock viewport to prevent scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <meta name="description" content="Calcite Maps Demo - Esri-Leaflet">
+  <meta name="description" content="Haverford College - Community Partnerships Map">
   <meta name="author" content="">
-  <link rel="icon" href="https://www.esri.com/favicon.ico">
-  <title>Calcite Maps - Esri-Leaflet</title>
+  <link rel="icon" href="https://www.haverford.edu/sites/default/files/favicons/apple-touch-icon-57x57.png">
+  <title>Haverford College - Community Partnerships Map</title>
 
   <!-- Calcite Maps Bootstrap -->
   <link rel="stylesheet" href="{% static 'calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.7.css' %}">
@@ -84,9 +84,10 @@
         </div>
       </a>
       <ul class="dropdown-menu calcite-bgcolor-red">
-        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-globe"></span> Search</a></li>
-        <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
-        <li><a role="menuitem" tabindex="0" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
+        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-globe"></span> Advanced Search</a></li>
+        <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="false"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+        <li><a role="menuitem" tabindex="0" href="/autocomplete/" data-target="#panelLegend" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Browse</a></li>
+
       </ul>
     </div>
     <!-- Title -->
@@ -121,17 +122,22 @@
     <div id="panelInfo" class="panel collapse">
       <div id="headingInfo" class="panel-heading" role="tab">
         <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span><span class="panel-label">Advanced Search</span></a> 
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
         </div>
       </div>
       <div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
         <div class="panel-body">            
+          <b>Press ⌘ to select multiple.</b>
           <form action="" method="post">
           {% csrf_token %}
-          <table>
-           {{ form }} 
-          </table>
+          <p>Language:</p> {{ form.language }}</br> 
+          <p>Area of Interest:</p> {{ form.area_of_interest }}</br>
+          <p>Region:</p> {{ form.region }} <br>
+          <p>When Available:</p> {{ form.when_available }} <br>
+          <p>Type of Opportunity:</p> {{ form.type_of_opportunity }} <br>
+          <p>Subject(s):</p> {{ form.subject }} <br>
+          <p>Keyword(s):</p> {{ form.keywords }} <br>
           <input type="submit" value="Search" /> 
           </form>
  </div>      
@@ -153,9 +159,26 @@
       </div>
     </div>
 
-    <!-- Basemaps Panel -->
+<!-- Languge Panel -->
 
-    <div id="panelBasemaps" class="panel collapse">
+    <div id="panelLegend" class="panel collapse">
+      <div id="headingLegend" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseLegend" aria-expanded="false" aria-controls="collapseLegend"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Legend</span></a> 
+          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLegend"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a> 
+        </div>
+      </div>
+      <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLegend">
+        <div class="panel-body">            
+          <div id="legendDiv"></div>
+        </div>
+      </div>
+    </div>
+
+
+<!-- Select Panel -->
+
+<div id="panelBasemaps" class="panel collapse">
       <div id="headingBasemaps" class="panel-heading" role="tab">
         <div class="panel-title">
           <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps" aria-expanded="false"   aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Basemaps</span></a> 
@@ -177,6 +200,7 @@
         </div>
       </div>
     </div>
+
     
   </div> <!-- /.calcite-panels -->
 
@@ -187,14 +211,17 @@
     // Esri-Leaflet 
     // ============
 
-    var map = L.map('map', {zoomControl: false}).setView([25.969880, -36.367591], 3),
+    var map = L.map('map', {zoomControl: false}).setView([39.568767, -3.373166], 3),
       layer = L.esri.basemapLayer('NationalGeographic').addTo(map),
       // layerLabels = L.esri.basemapLayer('xxxLabels').addTo(map);
       layerLabels = null,
       worldTransportation = L.esri.basemapLayer('ImageryTransportation');      
+ 
+     //==========================
+     //Things that Andy has added
+     //========================== 
 
-
-      var data = {{ sites|geojsonfeature:"popupContent"|safe }};
+     var data = {{ sites|geojsonfeature:"popupContent"|safe }};
 
       L.geoJson(data, {
               onEachFeature: function onEachFeature(feature, layer) {
@@ -202,6 +229,11 @@
                 var content = `<p>${props}</p>`;
                 layer.bindPopup(content);
             }}).addTo(map);
+
+    
+    //Not Stuff Andy has added
+
+
 
     function setBasemap(basemap) {
       if (layer) {
@@ -251,7 +283,7 @@
   
   </script>
 
-  <!-- ====== -->
+<!-- ====== -->
   <!-- jQuery --> 
   <!-- ====== -->
 
@@ -262,16 +294,13 @@
 
 
   <script type="text/javascript">
-
     $(document).ready(function(){
-
       // Basemap changed
       $("#selectStandardBasemap").on("change", function(e) {
         setBasemap($(this).val());
       });
 
-
-    });<!-- jQuery -->
+<!-- jQuery -->
   </script>
 
   <!-- Bootstrap core JavaScript
