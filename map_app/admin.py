@@ -1,7 +1,9 @@
 from django.contrib import admin
-from django.contrib.gis import admin
+from django.contrib.gis import admin as geoadmin
 from leaflet.admin import LeafletGeoAdmin
 
+from django.contrib.gis.db import models as geomodels
+from map_app.forms import *
 from map_app.models import *
 
 # Note: we are renaming the original Admin and Form as we import them!
@@ -13,40 +15,61 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 
 #We have to unregister the normal admin, and then reregister ours
-admin.site.register(PartnerSite, LeafletGeoAdmin)
+from mapwidgets.widgets import GooglePointFieldWidget
+
+class PartnerSiteAdmin(LeafletGeoAdmin):
+    list_filter = ('name', 'area_of_interest')
+    autocomplete_fields = ['organization','contact','haverford_office','area_of_interest','language','region','subject','keywords','type_of_opportunity',]
+
+    formfield_overrides = {
+        geomodels.PointField: {"widget": GooglePointFieldWidget}
+    }
+
+
+admin.site.register(PartnerSite, PartnerSiteAdmin)
+#geoadmin.site.register(PartnerSite, LeafletGeoAdmin)
+
 
 class PersonAdmin(admin.ModelAdmin):
-    pass 
+    search_fields = ['name']
+
 admin.site.register(Person, PersonAdmin)
 
 class HaverfordOfficeAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(HaverfordOffice, HaverfordOfficeAdmin)
 
 class PartnerOrganizationAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(PartnerOrganization, PartnerOrganizationAdmin)
 
 class AreaOfInterestAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
 admin.site.register(AreaOfInterest, AreaOfInterestAdmin)
 
 class LanguageAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(Language, LanguageAdmin)
 
 class RegionAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(Region, RegionAdmin)
 
 class SubjectAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(Subject, SubjectAdmin)
 
 class TypeOfOpportunityAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(TypeOfOpportunity, TypeOfOpportunityAdmin)
 
 class KeywordAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
+
 admin.site.register(Keyword, KeywordAdmin)
