@@ -11,10 +11,15 @@ def index(request):
 	if request.method == 'POST':
 		form = SearchForm(request.POST)
 		query = request.POST.get('search', None)
+		if request.POST.get('language', None):
+			language = SearchQuery(request.POST.get('language', None)) 
 		print(request.POST)
 		if form.is_valid():
-			sites = PartnerSite.objects.annotate(search=SearchVector('name','area_of_interest__name')).filter(search=query)
-			#sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
+			if query == '':
+				sites = PartnerSite.objects.all()
+			else:
+				sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name')).filter(search=query)
+				#sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
 			context  = {'sites':sites, 'form':form}
 			return render(request, 'index.html', context)
 		else:
@@ -34,7 +39,7 @@ def site(request, site):
 class SiteAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
-        qs = PartnerSite.objects.all()
+        qs = Language.objects.all()
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)

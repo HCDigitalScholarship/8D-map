@@ -1,0 +1,16 @@
+Django==2.0.5
+django-autocomplete-light==3.2.10
+django-ckeditor==5.4.0
+django-geojson==2.11.0
+django-geojson-serializer==0.2
+django-js-asset==1.1.0
+django-leaflet==0.23.0
+django-map-widgets==0.1.9
+jsonfield==2.0.2
+Pillow==5.1.0
+pkg-resources==0.0.0
+psycopg2==2.7.4
+psycopg2-binary==2.7.4
+pyproj==1.9.5.1
+pytz==2018.4
+six==1.11.0

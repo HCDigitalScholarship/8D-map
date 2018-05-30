@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from map_app import views
 from map_app.models import *
+from map_app.views import *
 from django.conf.urls import include
 from djgeojson.views import GeoJSONLayerView
 
@@ -26,4 +27,5 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('data/', GeoJSONLayerView.as_view(model=PartnerSite, properties=('geom', 'description','name')), name='data'),
     path('<site>', views.site, name='site'),
+    path('autocomplete/', SiteAutocomplete.as_view(), name='autocomplete'),
 ]

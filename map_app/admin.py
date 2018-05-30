@@ -18,8 +18,9 @@ from django import forms
 from mapwidgets.widgets import GooglePointFieldWidget
 
 class PartnerSiteAdmin(LeafletGeoAdmin):
+#class PartnerSiteAdmin(admin.ModelAdmin):
     list_filter = ('name', 'area_of_interest')
-    autocomplete_fields = ['organization','contact','haverford_office','area_of_interest','language','region','subject','keywords','type_of_opportunity',]
+    autocomplete_fields = ['organization','haverford_office','contact','area_of_interest','language','region','subject','keywords','type_of_opportunity',]
 
     formfield_overrides = {
         geomodels.PointField: {"widget": GooglePointFieldWidget}
@@ -31,7 +32,7 @@ admin.site.register(PartnerSite, PartnerSiteAdmin)
 
 
 class PersonAdmin(admin.ModelAdmin):
-    search_fields = ['name']
+    search_fields = ['first_name','last_name',]
 
 admin.site.register(Person, PersonAdmin)
 
