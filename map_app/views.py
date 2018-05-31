@@ -11,14 +11,14 @@ def index(request):
 	if request.method == 'POST':
 		form = SearchForm(request.POST)
 		query = request.POST.get('search', None)
-		if request.POST.get('language', None):
-			language = SearchQuery(request.POST.get('language', None)) 
+		language = request.POST.get('language', None)
 		print(request.POST)
+		print(language)
 		if form.is_valid():
 			if query == '':
 				sites = PartnerSite.objects.all()
 			else:
-				sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name')).filter(search=query)
+				sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name','organization__name','contact__first_name','contact__last_name','region__name','subject__name','keywords__name',)).filter(search=query)
 				#sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
 			context  = {'sites':sites, 'form':form}
 			return render(request, 'index.html', context)
