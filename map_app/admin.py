@@ -21,9 +21,8 @@ class PartnerSiteAdmin(LeafletGeoAdmin):
 #class PartnerSiteAdmin(admin.ModelAdmin):
     list_filter = ('name', 'area_of_interest')
     autocomplete_fields = ['organization','haverford_office','contact','area_of_interest','language','region','subject','keywords','type_of_opportunity',]
-
     formfield_overrides = {
-        geomodels.PointField: {"widget": GooglePointFieldWidget}
+        models.PointField: {"widget": GooglePointFieldWidget}
     }
 
 
