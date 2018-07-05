@@ -20,6 +20,7 @@ from mapwidgets.widgets import GooglePointFieldWidget
 class PartnerSiteAdmin(LeafletGeoAdmin):
 #class PartnerSiteAdmin(admin.ModelAdmin):
     list_filter = ('name', 'area_of_interest')
+    search_fields = ['name']
     autocomplete_fields = ['organization','haverford_office','contact','area_of_interest','language','region','subject','keywords','type_of_opportunity',]
 
     formfield_overrides = {
