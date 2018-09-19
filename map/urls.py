@@ -26,6 +26,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('data/', GeoJSONLayerView.as_view(model=PartnerSite, properties=('geom', 'description','name')), name='data'),
-    #path('<site>', views.site, name='site'),
+    path('current/', views.current, name='current'),
+    path('philly/', views.philly, name='philly'),
     path('autocomplete/', SiteAutocomplete.as_view(), name='autocomplete'),
 ]

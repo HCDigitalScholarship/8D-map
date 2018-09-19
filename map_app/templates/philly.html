@@ -16,7 +16,7 @@
   <meta name="description" content="Haverford College - Community Partnerships Map">
   <meta name="author" content="">
   <link rel="icon" href="https://www.haverford.edu/sites/default/files/favicons/apple-touch-icon-57x57.png">
-  <title>Haverford College - Civic Engagement Map</title>
+  <title>Haverford College - Community Partnerships Map</title>
 
 <!-- Calcite Maps Bootstrap -->
   <link rel="stylesheet" href="{% static 'calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.7.css' %}">
@@ -63,9 +63,6 @@
     .leaflet-touch .leaflet-bar {
       border: none;
     }
-    .nav {
-      background-color:#A20000;
-    }
   </style>
 
 </head>
@@ -87,7 +84,7 @@
       <ul class="dropdown-menu calcite-bgcolor-dark-red">
         <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-globe"></span> Advanced Search</a></li>
         <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
-        <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+        <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Filter</a></li>
         <li><a role="menuitem" tabindex="0" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
       </ul>
     </div>
@@ -95,7 +92,7 @@
     <div class="calcite-title calcite-overflow-hidden">
       <span class="calcite-title-main">Haverford College</span>
       <span class="calcite-title-divider hidden-xs"></span>
-      <span class="calcite-title-sub hidden-xs">Civic Engagement Map</span> 
+      <span class="calcite-title-sub hidden-xs">Community Partnerships Map</span> 
     </div>
      <!-- Nav -->
 
@@ -115,7 +112,7 @@
   </div><!-- /.container -->
 
   <!-- Panel -->
-W
+
   <div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-dark-red" role="tablist" aria-multiselectable="true">
   
     <!-- Info Panel -->
@@ -160,23 +157,27 @@ W
 
     <!-- Basemaps Panel -->
 
-    <div id="panelBasemaps" class="panel collapse in">
+    <div id="panelBasemaps" class="panel collapse">
       <div id="headingBasemaps" class="panel-heading" role="tab">
         <div class="panel-title">
-          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps" aria-expanded="false"   aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">About</span></a> 
+          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps" aria-expanded="false"   aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Filter</span></a> 
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelBasemaps"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
         </div>
       </div>
-      <div id="collapseBasemaps" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingBasemaps">
+      <div id="collapseBasemaps" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps">
         <div class="panel-body">
-         Welcome to the Haverford College Civic Engagement Map!<br> 
-         Here you will find organizations that we have worked with that offer possibilities for engagement through volunteer opportunities, internships, collaborative projects and more. Each organization has listed a contact person at Haverford that you can reach out to for more information.
-
-Do you have an organization you've worked with that should be on the map? <a href="https://forms.haverford.edu/view.php?id=592618"> Complete this form!</a>
-
-Questions or concerns? Email <a href="mailto:ejohnson3@haverford.edu">Emily Johnson</a>
-
-
+          <a href="{% url 'current' %}" class="btn btn-default" role="button">Currently Available</a>
+          <a href="{% url 'philly' %}" class="btn btn-default" role="button">Philly-area Partnerships</a>
+          <select id="selectStandardBasemap" class="form-control">
+            <option value="Streets">Streets</option>
+            <option value="Imagery">Satellite</option>
+            <!-- <option value="Hybrid">Hybrid</option> -->
+            <option selected value="NationalGeographic">National Geographic</option>
+            <option value="Topographic">Topographic</option>
+            <option value="Gray">Gray</option>
+            <option value="DarkGray">Dark Gray</option>
+            <option value="OpenStreetMap">Open Street Map</option>
+          </select>
         </div>
       </div>
     </div>
@@ -188,7 +189,7 @@ Questions or concerns? Email <a href="mailto:ejohnson3@haverford.edu">Emily John
     // ============
     // Esri-Leaflet 
     // ============
-    var map = L.map('map', {zoomControl: false}).setView([39.568767, -3.373166], 3),
+    var map = L.map('map', {zoomControl: false}).setView([39.957553, -75.235865], 12),
       layer = L.esri.basemapLayer('NationalGeographic').addTo(map),
       // layerLabels = L.esri.basemapLayer('xxxLabels').addTo(map);
       layerLabels = null,
