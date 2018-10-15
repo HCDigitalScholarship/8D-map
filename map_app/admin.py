@@ -15,20 +15,28 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 
 #We have to unregister the normal admin, and then reregister ours
-from mapwidgets.widgets import GooglePointFieldWidget
 
-class PartnerSiteAdmin(LeafletGeoAdmin):
-#class PartnerSiteAdmin(admin.ModelAdmin):
+#class PartnerSiteAdmin(LeafletGeoAdmin):
+class PartnerSiteAdmin(admin.ModelAdmin):
     list_filter = ('name', 'area_of_interest')
     search_fields = ['name']
     autocomplete_fields = ['organization','haverford_office','contact','area_of_interest','language','region','subject','keywords','type_of_opportunity',]
-    formfield_overrides = {
-        models.PointField: {"widget": GooglePointFieldWidget}
-    }
+    #formfield_overrides = {
+    #    models.PointField: {"widget": GooglePointFieldWidget}
+    #}
+
+    def get_form(self, request, obj=None, **kwargs):
+        if not obj:
+            self.form = PartnerSiteAdminForm
+        else:
+            self.form = PartnerSiteAdminStaticForm
+        return super(PartnerSiteAdmin, self).get_form(request, obj, **kwargs)
 
 
 admin.site.register(PartnerSite, PartnerSiteAdmin)
 #geoadmin.site.register(PartnerSite, LeafletGeoAdmin)
+
+
 
 
 class PersonAdmin(admin.ModelAdmin):

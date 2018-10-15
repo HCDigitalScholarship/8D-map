@@ -9,8 +9,7 @@ class ContactManager(models.Manager):
         return self.filter(contact__icontains=contact)
 
 class PartnerSite(models.Model):
-
-    geom = PointField(null=True, blank=True)
+    geom = models.PointField(null=True, blank=True)
     name = models.CharField(max_length=200, blank=True)
     organization = models.ManyToManyField('PartnerOrganization', blank=True)
     contact = models.ManyToManyField('Person', blank=True)
