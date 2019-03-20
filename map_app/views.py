@@ -13,6 +13,7 @@ def index(request):
 		form = SearchForm(request.POST)
 		query = request.POST.get('search', None)
 		language = request.POST.get('language', None)
+		greeting = 'no'
 		print(request.POST)
 		print(language)
 		if form.is_valid():
@@ -21,7 +22,7 @@ def index(request):
 			else:
 				sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name','organization__name','contact__first_name','contact__last_name','region__name','subject__name','keywords__name',)).filter(search=query)
 				#sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
-			context  = {'sites':sites, 'form':form}
+			context  = {'sites':sites, 'form':form, 'greeting':greeting}
 			return render(request, 'index.html', context)
 		else:
 			print(form.errors)

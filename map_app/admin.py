@@ -29,7 +29,7 @@ class PartnerSiteAdmin(admin.ModelAdmin):
         if not obj:
             self.form = PartnerSiteAdminForm
         else:
-            self.form = PartnerSiteAdminStaticForm
+            self.form = PartnerSiteAdminForm
         return super(PartnerSiteAdmin, self).get_form(request, obj, **kwargs)
 
 

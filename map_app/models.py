@@ -28,11 +28,12 @@ class PartnerSite(models.Model):
     def popupContent(self):
         if self.contact.first():
 
-            return '<br><b>{}</b><br><p>{}</p><br><p>Contact: <a href="mailto:{}">{}</a></p>'.format(
+            return '<br><b>{}</b><br><p>{}</p><br><p>Contact: <a href="mailto:{}">{}</a></p>{}'.format(
             self.name,
             self.description,
             self.contact.first().email,
-            self.contact.first().name)
+            self.contact.first().name,
+            self.contact.first().profile,)
         else:
             return '<br><b>{}</b><br><p>{}</p>'.format(
             self.name,
