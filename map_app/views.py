@@ -76,24 +76,26 @@ def current(request):
 
 
 def philly(request):
-        if request.method == 'POST':
-                form = SearchForm(request.POST)
-                query = request.POST.get('search', None)
-                language = request.POST.get('language', None)
-                print(request.POST)
-                print(language)
-                if form.is_valid():
-                        if query == '':
-                                sites = PartnerSite.objects.all()
-                        else:
-                                sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name','organization__name','contact__first_name','contact__last_name','region__name','subject__name','keywords__name',)).filter(search=query)
-                                #sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
-                        context  = {'sites':sites, 'form':form}
-                        return render(request, 'philly.html', context)
-                else:
-                        print(form.errors)
-        else:
-                sites = PartnerSite.objects.all()
+	top_interests = PartnerSite.objects.order_by().values('area_of_interest__name').distinct().annotate(Count('area_of_interest')).order_by('-area_of_interest__count')[:10]
+	if request.method == 'POST':
+		form = SearchForm(request.POST)
+		query = request.POST.get('search', None)
+		language = request.POST.get('language', None)
+		greeting = 'no'
+		print(request.POST)
+		print(language)
+		if form.is_valid():
+			if query == '':
+				sites = PartnerSite.objects.all()
+			else:
+				sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name','organization__name','contact__first_name','contact__last_name','region__name','subject__name','keywords__name',)).filter(search=query)
+				#sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
+			context  = {'sites':sites, 'form':form, 'greeting':greeting, 'top_interests':top_interests}
+			return render(request, 'index.html', context)
+		else:
+			print(form.errors)
+	else:
+		sites = PartnerSite.objects.all()
 
-                form = SearchForm()
-                return render(request, 'philly.html', {'sites':sites, 'form':form})
+		form = SearchForm()
+		return render(request, 'index.html', {'sites':sites, 'form':form, 'top_interests':top_interests})
