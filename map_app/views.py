@@ -5,10 +5,12 @@ from map_app.models import *
 from map_app.forms import *
 from django.shortcuts import get_object_or_404
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.db.models import Count
 
 # Create your views here.
 
 def index(request):
+	top_interests = PartnerSite.objects.order_by().values('area_of_interest__name').distinct().annotate(Count('area_of_interest')).order_by('-area_of_interest__count')[:10]
 	if request.method == 'POST':
 		form = SearchForm(request.POST)
 		query = request.POST.get('search', None)
@@ -22,7 +24,7 @@ def index(request):
 			else:
 				sites = PartnerSite.objects.annotate(search=SearchVector('name','description','area_of_interest__name','language__name','organization__name','contact__first_name','contact__last_name','region__name','subject__name','keywords__name',)).filter(search=query)
 				#sites = PartnerSite.objects.filter(description__icontains=query, name__icontains=query, area_of_interest__name=query)
-			context  = {'sites':sites, 'form':form, 'greeting':greeting}
+			context  = {'sites':sites, 'form':form, 'greeting':greeting, 'top_interests':top_interests}
 			return render(request, 'index.html', context)
 		else:
 			print(form.errors)
@@ -30,7 +32,7 @@ def index(request):
 		sites = PartnerSite.objects.all()
 
 		form = SearchForm()
-		return render(request, 'index.html', {'sites':sites, 'form':form})
+		return render(request, 'index.html', {'sites':sites, 'form':form, 'top_interests':top_interests})
 
 
 def site(request, site):
